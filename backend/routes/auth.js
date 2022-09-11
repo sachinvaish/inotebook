@@ -5,10 +5,7 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get('/',(req,res)=>{
-   res.send(req.body);
-})
-
+// [END POINT] Create a user using POST "/api/auth/createuser" 
 router.post('/createuser',[
    body('email','Enter valid Email').isEmail(),
    body('name','Name must be atleast 3 characters').isLength({ min: 3}),
@@ -41,6 +38,45 @@ router.post('/createuser',[
             }
          }
          const JWT_SECRET="sacchuisagood boy";
+         const authToken = jwt.sign(data,JWT_SECRET);
+
+         res.json({authToken});
+      } catch (error) {
+         //catching errors 
+         console.error(error);
+         res.status(500).send("Some Error Occured");
+      }
+})
+
+// [END POINT] Authenticate a user using POST "/api/auth/login" 
+router.post('/login',[
+   body('email','Enter valid Email').isEmail(),
+   body('password','Password could not be blank').exists()
+],async (req,res)=>{
+   const errors = validationResult(req);
+   //validation check post
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const {email,password}=req.body;
+    try {
+         //  check if user exists
+         let user = await User.findOne({email});
+         if(!user){
+            return res.status(400).json({"error":"Please login with correct credentials"});
+         }
+         let passCompare = await bcrypt.compare(password, user.password);
+         if(!passCompare){
+            return res.status(400).json({"error":"Please login with correct credentials"});
+         }
+
+         //generating JWT token
+         const data = {
+            user :{
+               id : user.id
+            }
+         }
+         const JWT_SECRET="sacchuisagoodboy";
          const authToken = jwt.sign(data,JWT_SECRET);
 
          res.json({authToken});
