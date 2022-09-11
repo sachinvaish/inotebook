@@ -1,0 +1,54 @@
+const express = require('express');
+const router = express.Router();
+const User = require('../models/Users.js');
+const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+router.get('/',(req,res)=>{
+   res.send(req.body);
+})
+
+router.post('/createuser',[
+   body('email','Enter valid Email').isEmail(),
+   body('name','Name must be atleast 3 characters').isLength({ min: 3}),
+   body('password','Password must be atleast 3 characters').isLength({ min: 3})
+],async (req,res)=>{
+   const errors = validationResult(req);
+   //validation check post
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+         //  check if user with the email already exists
+         let user = await User.findOne({ email: { $eq: req.body.email } });
+         if(user){
+            return res.status(400).json({"error":"User already exists with this email"});
+         }
+         let salt = await bcrypt.genSalt(10);
+         let secPass= await bcrypt.hash(req.body.password, salt);
+         //user creation
+            user = User.create({
+            name : req.body.name,
+            email : req.body.email,
+            password: secPass,
+         })
+
+         //generating JWT token
+         const data = {
+            user :{
+               id : user.id
+            }
+         }
+         const JWT_SECRET="sacchuisagood boy";
+         const authToken = jwt.sign(data,JWT_SECRET);
+
+         res.json({authToken});
+      } catch (error) {
+         //catching errors 
+         console.error(error);
+         res.status(500).send("Some Error Occured");
+      }
+})
+
+module.exports=router;
