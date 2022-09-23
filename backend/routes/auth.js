@@ -4,8 +4,9 @@ const User = require('../models/Users.js');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fetchuser = require("../middleware/fetchuser");
 
-// [END POINT] Create a user using POST "/api/auth/createuser" 
+// Route 1 : Create a user using POST "/api/auth/createuser" 
 router.post('/createuser',[
    body('email','Enter valid Email').isEmail(),
    body('name','Name must be atleast 3 characters').isLength({ min: 3}),
@@ -48,7 +49,7 @@ router.post('/createuser',[
       }
 })
 
-// [END POINT] Authenticate a user using POST "/api/auth/login" 
+// Route 2 : Authenticate a user using POST "/api/auth/login" 
 router.post('/login',[
    body('email','Enter valid Email').isEmail(),
    body('password','Password could not be blank').exists()
@@ -85,6 +86,19 @@ router.post('/login',[
          console.error(error);
          res.status(500).send("Some Error Occured");
       }
+})
+
+// Route 3 : Authenticate a user using POST "/api/auth/login" 
+router.post('/getuser',fetchuser ,async (req,res)=>{
+   try {
+      userID=req.user.id;
+      const user = await User.findById(userID).select("-password");
+      res.json(user);
+   } catch (error) {
+       //catching errors 
+       console.error(error);
+       res.status(500).send("Some Error Occured");
+   }
 })
 
 module.exports=router;
