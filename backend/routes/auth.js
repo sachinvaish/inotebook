@@ -88,7 +88,7 @@ router.post('/login',[
       }
 })
 
-// Route 3 : Authenticate a user using POST "/api/auth/login" 
+// Route 3 : Get user Details using POST "/api/auth/getuser" 
 router.post('/getuser',fetchuser ,async (req,res)=>{
    try {
       userID=req.user.id;
