@@ -3,8 +3,8 @@ import noteContext from "../context/notes/noteContext";
 
 function AddNote() {
     const context=useContext(noteContext);
-    const [note, setNote] = useState({title:"", description:"", tags:"default"});
     const {addNote} = context;
+    const [note, setNote] = useState({title:"", description:"", tags:"default"});
 
     const handleClick=()=>{
         addNote(note);

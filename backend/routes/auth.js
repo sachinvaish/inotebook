@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fetchuser = require("../middleware/fetchuser");
 
+
 // Route 1 : Create a user using POST "/api/auth/createuser" 
 router.post('/createuser',[
    body('email','Enter valid Email').isEmail(),

@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const cors = require('cors')
 const fetchuser = require('../middleware/fetchuser');
 const { body, validationResult } = require('express-validator');
 const Notes = require('../models/Notes');
+
+router.use(cors());
 
 // Route 1 : Fetch all notes using GET "/api/notes/fetchallnotes" login required
 router.get('/fetchallnotes',fetchuser,async (req,res)=>{
