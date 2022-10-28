@@ -1,4 +1,4 @@
-import React, { useContext, useRef,useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import noteContext from "../context/notes/noteContext";
 import AddNote from './AddNote';
 import NoteItem from './NoteItem';
@@ -6,8 +6,8 @@ import NoteItem from './NoteItem';
 function Notes() {
 
   const context = useContext(noteContext);
-  const { notes, getNotes } = context;
-  const [newNote, setNewNote] = useState({title:"", description:"", tags:"default"});
+  const { notes, getNotes, editNote } = context;
+  const [newNote, setNewNote] = useState({ title: "", description: "", tags: "default" });
   getNotes();
 
   const refOpen = useRef(null);
@@ -21,9 +21,11 @@ function Notes() {
     setNewNote({ ...newNote, [e.target.name]: e.target.value })
   }
 
-  const handleClick=()=>{
+  const handleClick = () => {
+    console.log({newNote});
+    editNote(newNote._id, newNote.title, newNote.description, newNote.tags);
     refClose.current.click();
-    
+
   }
 
   return (

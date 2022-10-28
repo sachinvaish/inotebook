@@ -21,7 +21,7 @@ export default function NoteItem(props) {
             </div>
           </div>
             <p className="card-text">{note.description}</p>
-            <span class="badge bg-secondary">{note.tags}</span>
+            <span className="badge bg-secondary">{note.tags}</span>
         </div>
         </div>
     </div>
