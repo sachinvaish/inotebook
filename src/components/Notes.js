@@ -25,7 +25,6 @@ function Notes() {
     console.log({newNote});
     editNote(newNote._id, newNote.title, newNote.description, newNote.tags);
     refClose.current.click();
-
   }
 
   return (
@@ -68,6 +67,7 @@ function Notes() {
 
       <h4 className="mt-3">My Notes</h4>
       <div className="row">
+        {notes.length===0 && <div className='container'>No notes to display</div>}
         {notes.map((note) => {
           return <NoteItem key={note._id} note={note} updateNote={updateNote} />
         })}

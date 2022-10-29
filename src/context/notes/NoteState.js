@@ -78,14 +78,6 @@ const NoteState = (props) => {
     console.log("response aya"+json);
 
     //Logic to EDIT in CLIENT
-    for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
-      if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tags = tags;
-      }
-    }
   }
 
   return (
