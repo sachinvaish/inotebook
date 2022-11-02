@@ -8,7 +8,7 @@ export default function NoteItem(props) {
     const {note, updateNote} = props;
  
   return (
-    <div className="col-md-3 my-2">
+    <div className="col-md-3 my-2 ">
         <div className="card ">
         <div className="card-body">
           <div className="d-flex justify-content-between">

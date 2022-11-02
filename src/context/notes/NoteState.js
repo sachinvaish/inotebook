@@ -7,6 +7,16 @@ const NoteState = (props) => {
   const notesInitial = [];
 
   const [notes, setNotes] = useState(notesInitial);
+  const [alert, setAlert] = useState({status :"", message :""});
+
+  const showAlert=(message)=>{
+    let status="show";
+    setAlert({status,message});
+    setTimeout(() => {
+      status = "hide";
+      setAlert({status,message});
+    }, 3000);
+  }
 
   //FUNCTION : Fetch All Notes
   const getNotes = async () => {
@@ -81,7 +91,7 @@ const NoteState = (props) => {
   }
 
   return (
-    <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote, getNotes }}>
+    <NoteContext.Provider value={{ notes, alert, addNote, deleteNote, editNote, getNotes, showAlert}}>
       {props.children}
     </NoteContext.Provider>
   )

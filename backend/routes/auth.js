@@ -81,11 +81,11 @@ router.post('/login',[
          const JWT_SECRET="sacchuisagoodboy";
          const authToken = jwt.sign(data,JWT_SECRET);
 
-         res.json({authToken});
+         res.json({authToken : authToken, message : "Logged in Successfully"});
       } catch (error) {
          //catching errors 
          console.error(error);
-         res.status(500).send("Some Error Occured");
+         res.status(500).send({message : "Please login with correct credentials"});
       }
 })
 

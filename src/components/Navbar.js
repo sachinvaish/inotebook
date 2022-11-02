@@ -22,8 +22,10 @@ return (
                             </li>
                         </ul>
                         <div className={`form-check form-switch text-${props.mode==='light'?'dark':'light'}`}>
-                            <input className="form-check-input" onClick={props.toggleMode} type="checkbox" role="switch" id="flexSwitchCheckDefault"/>
-                            <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Switch to Dark Mode</label>
+                            <Link to ="/login" className="btn btn-primary mx-2">Login</Link>
+                            <Link to="/signup" className="btn btn-primary mx-2">Signup</Link>
+                            {/* <input className="form-check-input" onClick={props.toggleMode} type="checkbox" role="switch" id="flexSwitchCheckDefault"/>
+                            <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Switch to Dark Mode</label> */}
                         </div>
                     </div>
                 </div>
