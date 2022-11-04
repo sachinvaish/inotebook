@@ -3,7 +3,7 @@ import noteContext from "../context/notes/noteContext";
 
 function AddNote() {
     const context=useContext(noteContext);
-    const {addNote} = context;
+    const {addNote, showAlert} = context;
     const [note, setNote] = useState({title:"", description:"", tags:""});
 
     const handleClick=()=>{

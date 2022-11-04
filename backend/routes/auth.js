@@ -65,11 +65,11 @@ router.post('/login',[
          //  check if user exists
          let user = await User.findOne({email});
          if(!user){
-            return res.status(400).json({"error":"Please login with correct credentials"});
+            return res.status(400).json({"message":"Please login with correct credentials"});
          }
          let passCompare = await bcrypt.compare(password, user.password);
          if(!passCompare){
-            return res.status(400).json({"error":"Please login with correct credentials"});
+            return res.status(400).json({"message":"Please login with correct credentials"});
          }
 
          //generating JWT token
@@ -80,12 +80,12 @@ router.post('/login',[
          }
          const JWT_SECRET="sacchuisagoodboy";
          const authToken = jwt.sign(data,JWT_SECRET);
-
-         res.json({authToken : authToken, message : "Logged in Successfully"});
+         console.log(user);
+         res.json({authToken : authToken, message : "Logged in Successfully", user : user});
       } catch (error) {
          //catching errors 
          console.error(error);
-         res.status(500).send({message : "Please login with correct credentials"});
+         res.status(500).json({"error" : "Server Error Occured"});
       }
 })
 

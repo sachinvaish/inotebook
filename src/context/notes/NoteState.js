@@ -3,7 +3,6 @@ import NoteContext from "./noteContext";
 
 const NoteState = (props) => {
   const host = "http://localhost:5000";
-  let count = 0;
   const notesInitial = [];
 
   const [notes, setNotes] = useState(notesInitial);
@@ -17,22 +16,25 @@ const NoteState = (props) => {
       setAlert({status,message});
     }, 3000);
   }
-
+  
   //FUNCTION : Fetch All Notes
   const getNotes = async () => {
+    if(localStorage.authToken){
     try {
       const response = await fetch(`${host}/api/notes/fetchallnotes`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjMyZDBhMzU5ODk2ZTdhZmM3NDRlN2YwIn0sImlhdCI6MTY2Mzg5NzcxN30.PYwBYNVnvhTeYKTvgSz8UiP3iiGHXcIKtDg9b8yPTZU'
+          'auth-token': localStorage.authToken
         },
       });
       const json = await response.json();
       setNotes(json);
+
     } catch (error) {
-      console.log("Unable to fetch from API Server");
+      showAlert("Something is not right - fetchnotes");
     }
+  }
   }
 
 
@@ -45,13 +47,14 @@ const NoteState = (props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjMyZDBhMzU5ODk2ZTdhZmM3NDRlN2YwIn0sImlhdCI6MTY2Mzg5NzcxN30.PYwBYNVnvhTeYKTvgSz8UiP3iiGHXcIKtDg9b8yPTZU'
+          'auth-token': localStorage.authToken
         },
         body: JSON.stringify({ title, description, tags })
       });
       const json = await response.json();
+      showAlert(json.message);
     } catch (error) {
-      console.log("Server API Error");
+      showAlert("Something is not right - addnote");
     }
   }
 
@@ -63,35 +66,35 @@ const NoteState = (props) => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjMyZDBhMzU5ODk2ZTdhZmM3NDRlN2YwIn0sImlhdCI6MTY2Mzg5NzcxN30.PYwBYNVnvhTeYKTvgSz8UiP3iiGHXcIKtDg9b8yPTZU'
+          'auth-token': localStorage.authToken
         },
       });
       const json = await response.json();
+      showAlert(json.message);
     } catch (error) {
-      console.log("Server API Error");
+      showAlert("Something is not right - delete note");
     }
   }
 
   //FUNCTION :Edit a note
   const editNote = async (id, title, description, tags) => {
     //API CALL
-    console.log("Updating id"+id);
     const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjMyZDBhMzU5ODk2ZTdhZmM3NDRlN2YwIn0sImlhdCI6MTY2Mzg5NzcxN30.PYwBYNVnvhTeYKTvgSz8UiP3iiGHXcIKtDg9b8yPTZU'
+        'auth-token': localStorage.authToken
       },
       body: JSON.stringify({ title, description, tags })
     });
     const json = await response.json();
-    console.log("response aya"+json);
+    showAlert(json.message);
 
     //Logic to EDIT in CLIENT
   }
 
   return (
-    <NoteContext.Provider value={{ notes, alert, addNote, deleteNote, editNote, getNotes, showAlert}}>
+    <NoteContext.Provider value={{ notes, alert, addNote, deleteNote, editNote, getNotes, showAlert, setNotes}}>
       {props.children}
     </NoteContext.Provider>
   )

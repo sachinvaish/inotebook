@@ -1,4 +1,5 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import noteContext from "../context/notes/noteContext";
 import AddNote from './AddNote';
 import NoteItem from './NoteItem';
@@ -6,12 +7,20 @@ import NoteItem from './NoteItem';
 function Notes() {
 
   const context = useContext(noteContext);
-  const { notes, getNotes, editNote } = context;
+  const { notes, getNotes, editNote,setNotes } = context;
   const [newNote, setNewNote] = useState({ title: "", description: "", tags: "default" });
-  getNotes();
+  
+  useEffect(() => {
+    return () => {
+      authorize();
+      getNotes();
+    };
+  }, [notes]);
 
   const refOpen = useRef(null);
   const refClose = useRef(null);
+  const navigate = useNavigate();
+
   const updateNote = (note) => {
     refOpen.current.click();
     setNewNote(note);
@@ -27,10 +36,18 @@ function Notes() {
     refClose.current.click();
   }
 
+  const authorize = ()=>{
+    console.log("authorize called");
+    if(!localStorage.authToken){
+      setNotes([]);
+      // navigate("/login");
+    }
+  }
+
   return (
     <>
+    {/* {authorize()} */}
       <AddNote />
-
 
       <button type="button" ref={refOpen} className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Launch demo modal

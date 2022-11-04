@@ -9,8 +9,14 @@ router.use(cors());
 
 // Route 1 : Fetch all notes using GET "/api/notes/fetchallnotes" login required
 router.get('/fetchallnotes',fetchuser,async (req,res)=>{
-   const notes = await Notes.find({user : req.user.id});
-   res.json(notes);
+   try {
+      const notes = await Notes.find({user : req.user.id});
+      res.json(notes);
+   } catch (error) {
+      //catching errors 
+      console.error(error);
+      res.status(500).send("Some Error Occured");
+   }
 })
 
 // Route 2 : Add a Note using POSt "/api/notes/addnote" login required
@@ -27,7 +33,7 @@ router.post('/addnote',fetchuser, [
       const {title, description, tags}=req.body;
       const note = await new Notes({title,description,tags, user : req.user.id});
       const NewNote = await note.save();
-      res.json(NewNote);
+      res.json({"message":"Note Added Successfully"});
    } catch (error) {
       //catching errors 
       console.error(error);
@@ -52,7 +58,7 @@ router.put('/updatenote/:id',fetchuser,async (req,res)=>{
       }
 
       note = await Notes.findByIdAndUpdate(req.params.id, {$set : newNote}, {new:true})
-      return res.json(note);
+      return res.json({"message":"Note Updated Successfully"});
    } catch (error) {
       console.error(error);
       res.status(500).send("Some Error Occured");
@@ -71,7 +77,7 @@ router.delete('/deletenote/:id',fetchuser,async (req,res)=>{
          return res.status(401).send("Not Allowed");
       }
       await Notes.findByIdAndDelete(req.params.id)
-      return res.json({"Success":"Note Deleted Successfully"});
+      return res.json({"message":"Note Deleted Successfully"});
    } catch (error) {
       console.error(error);
       res.status(500).send("Some Error Occured");

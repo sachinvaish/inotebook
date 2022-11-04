@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import noteContext from "../context/notes/noteContext";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
+    let navigate = useNavigate();
     const context = useContext(noteContext);
     const {showAlert} = context;
 
@@ -18,7 +20,9 @@ function Login() {
         const json = await response.json();
         console.log(json);
         localStorage.authToken = json.authToken;
+        localStorage.userName = json.user.name;
         showAlert(json.message);
+        navigate("/");
     }
 
     return (
