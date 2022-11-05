@@ -5,21 +5,19 @@ import AddNote from './AddNote';
 import NoteItem from './NoteItem';
 
 function Notes() {
-
   const context = useContext(noteContext);
-  const { notes, getNotes, editNote,setNotes } = context;
+  const { notes, getNotes, editNote, setNotes } = context;
   const [newNote, setNewNote] = useState({ title: "", description: "", tags: "default" });
   
   useEffect(() => {
     return () => {
-      authorize();
       getNotes();
     };
   }, [notes]);
 
   const refOpen = useRef(null);
   const refClose = useRef(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const updateNote = (note) => {
     refOpen.current.click();
@@ -36,17 +34,8 @@ function Notes() {
     refClose.current.click();
   }
 
-  const authorize = ()=>{
-    console.log("authorize called");
-    if(!localStorage.authToken){
-      setNotes([]);
-      // navigate("/login");
-    }
-  }
-
   return (
     <>
-    {/* {authorize()} */}
       <AddNote />
 
       <button type="button" ref={refOpen} className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -81,11 +70,11 @@ function Notes() {
           </div>
         </div>
       </div>
-
       <h4 className="mt-3">My Notes</h4>
       <div className="row">
-        {notes.length===0 && <div className='container'>No notes to display</div>}
-        {notes.map((note) => {
+        {localStorage.authToken===undefined && <div className='container'>Please login to see your notes</div>}
+        {(notes.length===0 && localStorage.authToken ) && <div className='container'>No notes to display</div>}
+        {localStorage.authToken!==undefined && notes.map((note) => {
           return <NoteItem key={note._id} note={note} updateNote={updateNote} />
         })}
       </div>

@@ -8,98 +8,98 @@ const fetchuser = require("../middleware/fetchuser");
 
 
 // Route 1 : Create a user using POST "/api/auth/createuser" 
-router.post('/createuser',[
-   body('email','Enter valid Email').isEmail(),
-   body('name','Name must be atleast 3 characters').isLength({ min: 3}),
-   body('password','Password must be atleast 3 characters').isLength({ min: 3})
-],async (req,res)=>{
+router.post('/createuser', [
+   body('email', 'Enter valid Email').isEmail(),
+   body('name', 'Name must be atleast 3 characters').isLength({ min: 3 }),
+   body('password', 'Password must be atleast 3 characters').isLength({ min: 3 })
+], async (req, res) => {
    const errors = validationResult(req);
    //validation check post
-    if (!errors.isEmpty()) {
+   if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
-    }
-    try {
-         //  check if user with the email already exists
-         let user = await User.findOne({ email: { $eq: req.body.email } });
-         if(user){
-            return res.status(400).json({"error":"User already exists with this email"});
-         }
-         let salt = await bcrypt.genSalt(10);
-         let secPass= await bcrypt.hash(req.body.password, salt);
-         //user creation
-            user = User.create({
-            name : req.body.name,
-            email : req.body.email,
-            password: secPass,
-         })
-
-         //generating JWT token
-         const data = {
-            user :{
-               id : user.id
-            }
-         }
-         const JWT_SECRET="sacchuisagood boy";
-         const authToken = jwt.sign(data,JWT_SECRET);
-
-         res.json({authToken});
-      } catch (error) {
-         //catching errors 
-         console.error(error);
-         res.status(500).send("Some Error Occured");
-      }
-})
-
-// Route 2 : Authenticate a user using POST "/api/auth/login" 
-router.post('/login',[
-   body('email','Enter valid Email').isEmail(),
-   body('password','Password could not be blank').exists()
-],async (req,res)=>{
-   const errors = validationResult(req);
-   //validation check post
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const {email,password}=req.body;
-    try {
-         //  check if user exists
-         let user = await User.findOne({email});
-         if(!user){
-            return res.status(400).json({"message":"Please login with correct credentials"});
-         }
-         let passCompare = await bcrypt.compare(password, user.password);
-         if(!passCompare){
-            return res.status(400).json({"message":"Please login with correct credentials"});
-         }
-
-         //generating JWT token
-         const data = {
-            user :{
-               id : user.id
-            }
-         }
-         const JWT_SECRET="sacchuisagoodboy";
-         const authToken = jwt.sign(data,JWT_SECRET);
-         console.log(user);
-         res.json({authToken : authToken, message : "Logged in Successfully", user : user});
-      } catch (error) {
-         //catching errors 
-         console.error(error);
-         res.status(500).json({"error" : "Server Error Occured"});
-      }
-})
-
-// Route 3 : Get user Details using POST "/api/auth/getuser" 
-router.post('/getuser',fetchuser ,async (req,res)=>{
+   }
    try {
-      userID=req.user.id;
-      const user = await User.findById(userID).select("-password");
-      res.json(user);
+      //  check if user with the email already exists
+      let user = await User.findOne({ email: { $eq: req.body.email } });
+      if (user) {
+         return res.status(400).json({ "error": "User already exists with this email" });
+      }
+      let salt = await bcrypt.genSalt(10);
+      let secPass = await bcrypt.hash(req.body.password, salt);
+      //user creation
+      user =  await User.create({
+         name: req.body.name,
+         email: req.body.email,
+         password: secPass,
+      })
+
+      //generating JWT token
+      const data = {
+         user: {
+            id: user.id
+         }
+      }
+      const JWT_SECRET = "sacchuisagood boy";
+      const authToken = jwt.sign(data, JWT_SECRET);
+      console.log(user);
+      res.json({ authToken: authToken, message: "Welcome to iNotebook, Please login", user: user });
    } catch (error) {
-       //catching errors 
-       console.error(error);
-       res.status(500).send("Some Error Occured");
+      //catching errors 
+      console.error(error);
+      res.status(500).json({ "message": "Server Error Occured" });
    }
 })
 
-module.exports=router;
+// Route 2 : Authenticate a user using POST "/api/auth/login" 
+router.post('/login', [
+   body('email', 'Enter valid Email').isEmail(),
+   body('password', 'Password could not be blank').exists()
+], async (req, res) => {
+   const errors = validationResult(req);
+   //validation check post
+   if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+   }
+   const { email, password } = req.body;
+   try {
+      //  check if user exists
+      let user = await User.findOne({ email });
+      if (!user) {
+         return res.status(400).json({ "message": "Please login with correct credentials" });
+      }
+      let passCompare = await bcrypt.compare(password, user.password);
+      if (!passCompare) {
+         return res.status(400).json({ "message": "Please login with correct credentials" });
+      }
+
+      //generating JWT token
+      const data = {
+         user: {
+            id: user.id
+         }
+      }
+      const JWT_SECRET = "sacchuisagoodboy";
+      const authToken = jwt.sign(data, JWT_SECRET);
+      console.log(user);
+      res.json({ authToken: authToken, message: "Logged in Successfully", user: user });
+   } catch (error) {
+      //catching errors 
+      console.error(error);
+      res.status(500).json({ "message": "Server Error Occured" });
+   }
+})
+
+// Route 3 : Get user Details using POST "/api/auth/getuser" 
+router.post('/getuser', fetchuser, async (req, res) => {
+   try {
+      userID = req.user.id;
+      const user = await User.findById(userID).select("-password");
+      res.json(user);
+   } catch (error) {
+      //catching errors 
+      console.error(error);
+      res.status(500).json({ "message": "Server Error Occured" });
+   }
+})
+
+module.exports = router;

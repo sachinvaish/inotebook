@@ -6,12 +6,14 @@ import { useNavigate } from 'react-router-dom';
 
 function Logout() {
     const context = useContext(noteContext);
-    const { setNotes } = context;
+    const {showAlert, setNotes } = context;
     const navigate = useNavigate();
 
     const onClick = () => {
         localStorage.clear();
+        setNotes([]);
         navigate("/");
+        showAlert("You've been logged out")
     }
 
     return (

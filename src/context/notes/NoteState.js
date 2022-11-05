@@ -29,6 +29,7 @@ const NoteState = (props) => {
         },
       });
       const json = await response.json();
+      console.log("fetchnote response"+json);
       setNotes(json);
 
     } catch (error) {
