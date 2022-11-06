@@ -20,11 +20,11 @@ function AddNote() {
       <h3>Add a note</h3>
       <div className="mb-2">
         <label htmlFor="title" className="form-label">Title  </label>
-        <input type="text" className="form-control" id="title" name="title" value={note.title} onChange={onChange} placeholder="Min Length : 5 Characters"/>
+        <input type="text" className="form-control" id="title" name="title" value={note.title} onChange={onChange} placeholder="Type Title Here" minLength={5} required/>
       </div>
       <div className="mb-2">
         <label htmlFor="description" className="form-label">Description </label>
-        <textarea className="form-control" id="description" name="description" value={note.description} onChange={onChange} rows="3" placeholder="Min Length : 5 Characters"></textarea>
+        <textarea className="form-control" id="description" name="description" value={note.description} onChange={onChange} rows="3" placeholder="Type Description Here" minLength={5} required></textarea>
       </div>
       <div className="mb-2">
         <label htmlFor="tags" className="form-label">Tags</label>

@@ -6,12 +6,19 @@ import NoteItem from './NoteItem';
 
 function Notes() {
   const context = useContext(noteContext);
-  const { notes, getNotes, editNote, setNotes } = context;
+  const { notes, getNotes, editNote, showAlert } = context;
   const [newNote, setNewNote] = useState({ title: "", description: "", tags: "default" });
+  const navigate = useNavigate();
   
   useEffect(() => {
     return () => {
-      getNotes();
+      if(localStorage.getItem('authToken')){
+        getNotes();
+      }else{
+        navigate("/login");
+        showAlert("Please Login/Signup to continue");
+      }
+      
     };
   }, [notes]);
 
@@ -37,7 +44,7 @@ function Notes() {
   return (
     <>
       <AddNote />
-
+    {/* UPDATE MODAL START */}
       <button type="button" ref={refOpen} className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Launch demo modal
       </button>
@@ -53,11 +60,11 @@ function Notes() {
             <div className="modal-body">
               <div className="mb-2">
                 <label htmlFor="title" className="form-label">Title</label>
-                <input type="text" className="form-control" value={newNote.title} id="title" name="title" onChange={onChange} placeholder="Enter Title here" />
+                <input type="text" className="form-control" value={newNote.title} id="title" name="title" onChange={onChange} placeholder="Enter Title here" minLength={5} required/>
               </div>
               <div className="mb-2">
                 <label htmlFor="description" className="form-label">Description</label>
-                <textarea className="form-control" value={newNote.description} id="description" name="description" onChange={onChange} rows="3" placeholder="Enter Description here"></textarea>
+                <textarea className="form-control" value={newNote.description} id="description" name="description" onChange={onChange} rows="3" placeholder="Enter Description here" minLength={5} required></textarea>
               </div>
               <div className="mb-2">
                 <label htmlFor="tags" className="form-label">Tags</label>
@@ -65,12 +72,15 @@ function Notes() {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={handleClick}>Save changes</button>
+              {/* <button type="button" className="btn btn-success" onClick={handleClick}>Save changes</button> */}
+              <button disabled={(newNote.title.length<5) || (newNote.description.length<5)} type="button" className="btn btn-success" onClick={handleClick}>Add my Note</button>
             </div>
           </div>
         </div>
       </div>
-      <h4 className="mt-3">My Notes</h4>
+      {/* UPDATE MODAL END */}
+
+          <h4 className="mt-3">My Notes</h4>
       <div className="row">
         {localStorage.authToken===undefined && <div className='container'>Please login to see your notes</div>}
         {(notes.length===0 && localStorage.authToken ) && <div className='container'>No notes to display</div>}

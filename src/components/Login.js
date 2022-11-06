@@ -1,4 +1,4 @@
-import React, { useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import noteContext from "../context/notes/noteContext";
 import { useNavigate } from "react-router-dom";
 
@@ -6,31 +6,35 @@ function Login() {
 
     let navigate = useNavigate();
     const context = useContext(noteContext);
-    const {showAlert} = context;
-    const [credentials, setCredentials] = useState({email:"", password:""});
+    const { showAlert } = context;
+    const [credentials, setCredentials] = useState({ email: "", password: "" });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const email = credentials.email;
         const password = credentials.password;
-        const response = await fetch(`http://localhost:5000/api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        const json = await response.json();
-        if(json.authToken){
-            localStorage.authToken = json.authToken;
-            localStorage.userName = json.user.name;
-            showAlert(json.message);
-            navigate("/");
-        }else{
-            showAlert(json.message);
+        try {
+            const response = await fetch(`http://localhost:5000/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const json = await response.json();
+            if (json.authToken) {
+                localStorage.authToken = json.authToken;
+                localStorage.userName = json.user.name;
+                showAlert(json.message);
+                navigate("/");
+            } else {
+                showAlert(json.message);
+            }
+        } catch (error) {
+            showAlert("Server connection failed");
         }
     }
 
-    const onChange=(e)=>{
-        setCredentials({...credentials,[e.target.name]:e.target.value});
+    const onChange = (e) => {
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
     }
 
     return (
