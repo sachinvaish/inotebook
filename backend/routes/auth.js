@@ -27,7 +27,7 @@ router.post('/createuser', [
       let salt = await bcrypt.genSalt(10);
       let secPass = await bcrypt.hash(req.body.password, salt);
       //user creation
-      user =  await User.create({
+      user = User.create({
          name: req.body.name,
          email: req.body.email,
          password: secPass,
@@ -41,12 +41,12 @@ router.post('/createuser', [
       }
       const JWT_SECRET = "sacchuisagood boy";
       const authToken = jwt.sign(data, JWT_SECRET);
-      console.log(user);
-      res.json({ authToken: authToken, message: "Welcome to iNotebook, Please login", user: user });
+
+      res.json({ authToken, "message":"Account created successfully"});
    } catch (error) {
       //catching errors 
       console.error(error);
-      res.status(500).json({ "message": "Server Error Occured" });
+      res.status(500).send("Some Error Occured");
    }
 })
 
@@ -80,12 +80,12 @@ router.post('/login', [
       }
       const JWT_SECRET = "sacchuisagoodboy";
       const authToken = jwt.sign(data, JWT_SECRET);
-      console.log(user);
-      res.json({ authToken: authToken, message: "Logged in Successfully", user: user });
+
+      res.json({ authToken, user , "message" : "Logged in Successfully"});
    } catch (error) {
       //catching errors 
       console.error(error);
-      res.status(500).json({ "message": "Server Error Occured" });
+      res.status(500).send("Some Error Occured");
    }
 })
 
@@ -98,7 +98,7 @@ router.post('/getuser', fetchuser, async (req, res) => {
    } catch (error) {
       //catching errors 
       console.error(error);
-      res.status(500).json({ "message": "Server Error Occured" });
+      res.status(500).send("Some Error Occured");
    }
 })
 

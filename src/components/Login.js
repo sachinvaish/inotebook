@@ -43,13 +43,15 @@ function Login() {
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-                    <input required type="email" pattern="+@globex\.com" size="30" className="form-control" onChange={onChange} value={credentials.email} id="email" name="email" aria-describedby="emailHelp" />
+                    <input required type="email"  size="30" className="form-control" onChange={onChange} value={credentials.email} id="email" name="email" aria-describedby="emailHelp" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                     <input required type="password" className="form-control" onChange={onChange} value={credentials.password} id="password" name="password" />
                 </div>
                 <button type="submit" className="btn btn-primary">Log in</button>
+                 
+                <button onClick={()=>{navigate("/signup")}} className="btn btn-link">Signup</button>
             </form>
         </div>
     );

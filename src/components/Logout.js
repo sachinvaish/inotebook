@@ -12,7 +12,7 @@ function Logout() {
     const onClick = () => {
         localStorage.clear();
         setNotes([]);
-        navigate("/");
+        navigate("/login");
         showAlert("You've been logged out")
     }
 

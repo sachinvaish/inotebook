@@ -61,6 +61,7 @@ function Signup() {
             <input required type="password" className="form-control" onChange={onChange} value={credentials.cpassword} id="cpassword" name="cpassword" />
           </div>
           <button disabled={credentials.password !== credentials.cpassword} type="submit" className="btn btn-primary">Sign up</button>
+          <button onClick={()=>{navigate("/login")}} className="btn btn-link">Log in</button>
         </form>
       </div>
     </div>
