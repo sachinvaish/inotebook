@@ -6,17 +6,17 @@ export default function NoteItem(props) {
   const context = useContext(noteContext);
   const { deleteNote } = context;
   const { note, updateNote } = props;
-  const refDelete = useRef(null);
-  const refClose = useRef(null);
+  // const refDelete = useRef(null);
+  // const refClose = useRef(null);
 
-  const handleDelete = () => {
-    refDelete.current.click();
-  }
+  // const handleDelete = () => {
+  //   refDelete.current.click();
+  // }
 
   return (
     <div className="col-md-3 my-2 ">
 
-      <button  hidden="true" type="button" ref={refDelete} class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">
+      {/* <button  hidden="true" type="button" ref={refDelete} class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">
         Launch Delete
       </button>
 
@@ -32,7 +32,7 @@ export default function NoteItem(props) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
 
       <div className="card ">
@@ -43,7 +43,7 @@ export default function NoteItem(props) {
             </div>
             <div className="d-flex justify-content-end">
               <i className="fa-solid fa-pen-to-square mx-2" onClick={() => { updateNote(note) }}></i>
-              <i className="fa-solid fa-trash mx-2" onClick={handleDelete}></i>
+              <i className="fa-solid fa-trash mx-2" onClick={()=>{deleteNote(note._id);}}></i>
             </div>
           </div>
           <p className="card-text">{note.description}</p>
